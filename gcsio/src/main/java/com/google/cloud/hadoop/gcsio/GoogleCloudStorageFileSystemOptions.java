@@ -64,6 +64,7 @@ public class GoogleCloudStorageFileSystemOptions {
     private PathCodec pathCodec = GoogleCloudStorageFileSystem.URI_ENCODED_PATH_CODEC;
     private boolean enableBucketDelete = false;
     private String markerFilePattern = null;
+    private boolean enableCooperativeLocking = false;
 
     public Builder setIsPerformanceCacheEnabled(boolean performanceCacheEnabled) {
       this.performanceCacheEnabled = performanceCacheEnabled;
@@ -180,6 +181,11 @@ public class GoogleCloudStorageFileSystemOptions {
       return this;
     }
 
+    public Builder setEnableCooperativeLocking(boolean enableCooperativeLocking) {
+      this.enableCooperativeLocking = enableCooperativeLocking;
+      return this;
+    }
+
     public GoogleCloudStorageFileSystemOptions build() {
       return new GoogleCloudStorageFileSystemOptions(
           immutablePerformanceCacheOptions != null
@@ -192,7 +198,8 @@ public class GoogleCloudStorageFileSystemOptions {
           shouldIncludeInTimestampUpdatesPredicate,
           pathCodec,
           enableBucketDelete,
-          markerFilePattern);
+          markerFilePattern,
+          enableCooperativeLocking);
     }
   }
 
@@ -207,6 +214,7 @@ public class GoogleCloudStorageFileSystemOptions {
   private final PathCodec pathCodec;
   private final boolean enableBucketDelete;
   private final Pattern markerFilePattern;
+  private final boolean enableCooperativeLocking;
 
   public GoogleCloudStorageFileSystemOptions(
       PerformanceCachingGoogleCloudStorageOptions performanceCacheOptions,
@@ -215,7 +223,8 @@ public class GoogleCloudStorageFileSystemOptions {
       TimestampUpdatePredicate shouldIncludeInTimestampUpdatesPredicate,
       PathCodec pathCodec,
       boolean enableBucketDelete,
-      String markerFilePattern) {
+      String markerFilePattern,
+      boolean enableCooperativeLocking) {
     this.performanceCacheOptions = performanceCacheOptions;
     this.performanceCacheEnabled = performanceCacheEnabled;
     this.cloudStorageOptions = cloudStorageOptions;
@@ -223,6 +232,7 @@ public class GoogleCloudStorageFileSystemOptions {
     this.pathCodec = pathCodec;
     this.enableBucketDelete = enableBucketDelete;
     this.markerFilePattern = Pattern.compile("^(.+/)?" + markerFilePattern + "$");
+    this.enableCooperativeLocking = enableCooperativeLocking;
   }
 
   public PerformanceCachingGoogleCloudStorageOptions getPerformanceCacheOptions() {
@@ -251,6 +261,10 @@ public class GoogleCloudStorageFileSystemOptions {
 
   public Pattern getMarkerFilePattern() {
     return markerFilePattern;
+  }
+
+  public boolean enableCooperativeLocking() {
+    return enableCooperativeLocking;
   }
 
   public void throwIfNotValid() {

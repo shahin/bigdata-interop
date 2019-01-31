@@ -527,6 +527,15 @@ public class GoogleHadoopFileSystemConfiguration {
   public static final GoogleHadoopFileSystemConfigurationProperty<String> GCS_CONFIG_OVERRIDE_FILE =
       new GoogleHadoopFileSystemConfigurationProperty<>("fs.gs.config.override.file", null);
 
+  /**
+   * Configuration key for using cooperative locking to achieve a directory mutation operations
+   * atomicity.
+   */
+  public static final GoogleHadoopFileSystemConfigurationProperty<Boolean>
+      GCS_COOPERATIVE_LOCKING_ENABLE =
+          new GoogleHadoopFileSystemConfigurationProperty<>(
+              "fs.gs.cooperative.locking.enable", false);
+
   // TODO(b/120887495): This @VisibleForTesting annotation was being ignored by prod code.
   // Please check that removing it is correct, and remove this comment along with it.
   // @VisibleForTesting
@@ -539,6 +548,8 @@ public class GoogleHadoopFileSystemConfiguration {
             .setMarkerFilePattern(GCS_MARKER_FILE_PATTERN.get(config, config::get))
             .setIsPerformanceCacheEnabled(
                 GCS_PERFORMANCE_CACHE_ENABLE.get(config, config::getBoolean))
+            .setEnableCooperativeLocking(
+                GCS_COOPERATIVE_LOCKING_ENABLE.get(config, config::getBoolean))
             .setImmutablePerformanceCachingOptions(getPerformanceCachingOptions(config));
 
     String projectId = GCS_PROJECT_ID.get(config, config::get);
