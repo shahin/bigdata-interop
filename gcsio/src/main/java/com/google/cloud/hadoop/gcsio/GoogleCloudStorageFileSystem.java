@@ -894,9 +894,8 @@ public class GoogleCloudStorageFileSystem {
     // we will try to carry out the copies in this list's order.
     List<FileInfo> srcItemInfos = listAllFileInfoForPrefix(srcInfo.getPath());
 
-    // Create the destination directory.
+    // Convert to the destination directory.
     dst = FileInfo.convertToDirectoryPath(pathCodec, dst);
-    mkdir(dst);
 
     // Create a list of sub-items to copy.
     String prefix = srcInfo.getPath().toString();
@@ -942,6 +941,9 @@ public class GoogleCloudStorageFileSystem {
           operationInstant,
           logRecords);
     }
+
+    // Create the destination directory.
+    mkdir(dst);
 
     // First, copy all items except marker items
     copyInternal(srcToDstItemNames);
